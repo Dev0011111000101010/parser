@@ -1,0 +1,23 @@
+{
+	"name": "jstewmc/text",
+	"description": "A simple text object",
+	"keywords": ["php", "jstewmc", "text"],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Jack Clayton",
+			"email": "clayjs0@gmail.com"	
+		}
+	],
+	"require": {
+		"php": "^7.0"
+	},
+	"require-dev": {
+		"jstewmc/test-case": "^1.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"Jstewmc\\Text\\": "src/"
+		}
+	}
+}

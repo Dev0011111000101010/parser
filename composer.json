@@ -1,0 +1,11 @@
+{
+    "require": {
+        "jstewmc/rtf": "^v0.4.3",
+        "jstewmc/stream": "^v0.2.1",
+        "jstewmc/text": "^0.1.1",
+        "jstewmc/chunker": "^0.1.0",
+        "henck/rtf-to-html": "^1.1",
+        "phpoffice/phpspreadsheet": "1.17",
+        "infostreams/excel-merge": "^0.8.5"
+    }
+}
