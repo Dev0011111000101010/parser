@@ -15,6 +15,7 @@ foreach ($alldocs as $docname) {
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(__DIR__.'/splitted10k/'.$docname);
         $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
         $newdocname = str_replace('csv', 'xlsx', $docname);
+        if(file_exists(__DIR__.'/converted10k/'.$newdocname)) continue;
         $objWriter->save(__DIR__.'/converted10k/'.$newdocname);
         echo memory_get_usage(); echo "\n";
         $spreadsheet->disconnectWorksheets();
