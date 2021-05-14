@@ -37,7 +37,7 @@ $sheettop = [
 
 $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
 
-function parseLinkLawyer($link_to_rtf = '', $dirname) {
+function parseLinkLawyer($link_to_rtf = '', $dirname, $suf) {
     if (isset($link_to_rtf) && !empty($link_to_rtf)) {
         $filearr = explode('/', $link_to_rtf);
         $filename = $filearr[count($filearr) - 1];
@@ -51,7 +51,7 @@ function parseLinkLawyer($link_to_rtf = '', $dirname) {
 
         if (!$server_output) return 'no server output';
 
-        file_put_contents("sources/$dirname/$filename", $server_output);
+        file_put_contents("sources/$dirname/$suf$filename", $server_output);
 
         $parser = new RtfStringTexter($server_output);
         $doc = mb_substr($parser->AsString(), 0, 1600);
