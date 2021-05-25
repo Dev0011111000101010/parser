@@ -59,6 +59,8 @@ function parseLinkLawyer($link_to_rtf = '', $dirname) {
             'відповідача' => '',
         ];
 
+        $firstpreg = '/(?:(?<=захисника)|(?<=адвоката)|(?<=захисник)|(?<=преставника)|(?<=представника))(\s|-)+([а-яА-Я]+[a-яА-Я\s.]+),/';
+
         // нежесткая регулярка
         $pregold = '/(?:(?<=захисника)|(?<=адвоката)|(?<=захисник)|(?<=преставника)|(?<=представника))[\s|\n]*[обвинуваченого|обвинуваченої|, - адвоката:]*(\s|-)+([а-яА-ЯІіЇї]+)\s*[А-ЯІЇ]\.*[А-ЯІЇ]\./u';
 
@@ -77,13 +79,17 @@ function parseLinkLawyer($link_to_rtf = '', $dirname) {
 
         if (!$server_output) return false;
 
-        file_put_contents("sources/$dirname/$filename", $server_output);
+//        file_put_contents("sources/$dirname/$filename", $server_output);
 
         $parser = new RtfStringTexter($server_output);
         $doc = mb_substr($parser->AsString(), 0, 1600);
         if (!$doc) return false;
 
         preg_match($pregold, $doc, $matches, PREG_OFFSET_CAPTURE);
+
+        if(!count($matches)) {
+            preg_match($firstpreg, $doc, $matches, PREG_OFFSET_CAPTURE);
+        };
 
         if(!count($matches)) return false;
 
@@ -138,10 +144,12 @@ function FilesProcessor($docname) {
         $link_to_rtf = $sheetData[$i][9];
         $realname = parseLinkLawyer($link_to_rtf, $newdirname);
         if ($realname) {
-//                var_dump($realname);
             $sheetData[$i][] = $realname;
         }
     }
+
+    $spreadsheet->disconnectWorksheets();
+    $spreadsheet->garbageCollect();
 
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
