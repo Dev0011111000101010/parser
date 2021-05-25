@@ -37,8 +37,32 @@ $sheettop = [
 
 $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
 
-function parseLinkLawyer($link_to_rtf = '', $dirname, $suf) {
+function parseLinkLawyer($link_to_rtf = '', $dirname) {
     if (isset($link_to_rtf) && !empty($link_to_rtf)) {
+
+        // библиотека замены значений
+        $replace = [
+            ',' => '',
+            "/n" => ' ',
+            'підозрюваного' => '',
+            'підозрюваної' => '',
+            'потерпілої' => '',
+            'адвокат' => '',
+            'потерпілого' => '',
+            'та' => '',
+            'обвинуваченого' => '',
+            'обвинувачених' => '',
+            'підсудного' => '',
+            'позивача' => '',
+            'відповідача' => '',
+        ];
+
+        // нежесткая регулярка
+        $pregold = '/(?:(?<=захисника)|(?<=адвоката)|(?<=захисник)|(?<=захисник)|(?<=преставника)|(?<=представника))[\s|\n]*[обвинуваченого|обвинуваченої|, - адвоката:]*(\s|-)+([а-яА-ЯІіЇї]+)\s*[А-ЯІЇ]\.*[А-ЯІЇ]\./u';
+
+        // жесткая регулярка
+        $pregname = '/[а-яА-ЯіІiIїгЄє]+(\s|\\n)[А-ЯіІЄє]\.[А-ЯіІЄє]\./u';
+
         $filearr = explode('/', $link_to_rtf);
         $filename = $filearr[count($filearr) - 1];
         $ch = curl_init();
@@ -49,38 +73,39 @@ function parseLinkLawyer($link_to_rtf = '', $dirname, $suf) {
         curl_setopt($ch, CURLOPT_USERAGENT, getRandomUserAgent());
         $server_output = curl_exec($ch);
 
-        if (!$server_output) return 'no server output';
+        if (!$server_output) return false;
 
-        file_put_contents("sources/$dirname/$suf$filename", $server_output);
+//        file_put_contents("sources/$dirname/$filename", $server_output);
 
         $parser = new RtfStringTexter($server_output);
         $doc = mb_substr($parser->AsString(), 0, 1600);
         if (!$doc) return false;
 
-        $re = '/(?<=захисника)(\s|-)+([а-яА-Я]+[a-яА-Я\s.]+),/';
+        preg_match($pregold, $doc, $matches, PREG_OFFSET_CAPTURE);
 
-        $secondre = '/(?<=адвоката)(\s|-)+([а-яА-Я]+[a-яА-Я\s.]+),/';
+        if(!count($matches)) return false;
 
-        preg_match($re, $doc, $matches, PREG_OFFSET_CAPTURE);
-        preg_match($re, $doc, $matches2, PREG_OFFSET_CAPTURE);
+        $prerealname = trim(str_replace(array_keys($replace), array_values($replace), $matches[0][0]));
 
-        if (count($matches)) {
-            $realname = trim(str_replace(['адвоката', '-', 'чи законного представника,', '.,', ' ,', 'особи,'], ['', '', '', '.', '', '', ''], $matches[0][0]));
-            if (mb_strlen($realname) > 30) return false;
-            if(!$realname=="") return $realname;
-        }
-        if (count($matches2)) {
-            $realname = trim(str_replace(['адвоката', '-', 'чи законного представника,', '.,', ' ,', 'особи,'], ['', '', '', '.', '', '', ''], $matches2[0][0]));
-            if ($realname == "" || mb_strlen($realname) > 30) return false;
-            return $realname;
-        }
+        if (!isset($prerealname)) return false;
+
+        preg_match($pregname, $prerealname, $matches2, PREG_OFFSET_CAPTURE);
+
+        if (!isset($matches2[0])) return false;
+
+        $realname = $matches2[0][0];
+
+        var_dump($realname);
+
+        if (mb_strlen($realname) > 30) return false;
+        if (!$realname == "") return $realname;
 
         return false;
     }
 }
 
-function sendMessage($vmnumber, $chatid = 335765864) {
-    $message = "Виртуальная машина $vmnumber закончила работу";
+function sendMessage($vmnumber, $chatid = 454255748) {
+    $message = "Парсинг $vmnumber закончен";
 
     $token = '1732465913:AAEPSUXxROLIhpcxTSIygaLgEN7sLduPuME';
     $url = "https://api.telegram.org/bot{$token}/sendMessage?chat_id={$chatid}&text=";
