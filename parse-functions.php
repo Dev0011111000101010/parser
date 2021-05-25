@@ -60,7 +60,7 @@ function parseLinkLawyer($link_to_rtf = '', $dirname) {
         ];
 
         // нежесткая регулярка
-        $pregold = '/(?:(?<=захисника)|(?<=адвоката)|(?<=захисник)|(?<=захисник)|(?<=преставника)|(?<=представника))[\s|\n]*[обвинуваченого|обвинуваченої|, - адвоката:]*(\s|-)+([а-яА-ЯІіЇї]+)\s*[А-ЯІЇ]\.*[А-ЯІЇ]\./u';
+        $pregold = '/(?:(?<=захисника)|(?<=адвоката)|(?<=захисник)|(?<=преставника)|(?<=представника))[\s|\n]*[обвинуваченого|обвинуваченої|, - адвоката:]*(\s|-)+([а-яА-ЯІіЇї]+)\s*[А-ЯІЇ]\.*[А-ЯІЇ]\./u';
 
         // жесткая регулярка
         $pregname = '/[а-яА-ЯіІiIїгЄє]+(\s|\\n)[А-ЯіІЄє]\.[А-ЯіІЄє]\./u';
@@ -123,7 +123,7 @@ function sendMessage($vmnumber, $chatid = 454255748) {
     return $result;
 }
 
-function FilesProcessor() {
+function FilesProcessor($docname) {
     $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(__DIR__.'/splitted10k/'.$docname);
     $newdocname = str_replace('csv', 'xlsx', $docname);
 
