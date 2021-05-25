@@ -522,7 +522,7 @@ abstract class	RtfTexter	extends		RtfParser
 
 				// Regular text data
 			   	case 	self::TOKEN_PCDATA :
-		   			$text 	=  utf8_encode ( $token -> ToText ( ) ) ;
+                    $text 	=  utf8_encode ( $token -> ToText ( ) ) ;
 			   		break ;
 			    }
 

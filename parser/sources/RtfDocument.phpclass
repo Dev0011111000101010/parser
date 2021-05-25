@@ -347,8 +347,8 @@ abstract class  RtfDocument	implements 	IRtfDocument
             // Curved quotes (��) converted into single quotes
             "\\lquote "	=>  "'",
             "\\rquote "	=>  "'",
-            '�'		=>  "'",
-            '�'		=>  "'",
+            '«'		=>  "'",
+            '»'		=>  "'",
 
             // French and english quotes
             "\\'ab "	=>  '"',
