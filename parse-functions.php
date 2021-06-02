@@ -57,6 +57,8 @@ function parseLinkLawyer($link_to_rtf = '', $dirname) {
             'підсудного' => '',
             'позивача' => '',
             'відповідача' => '',
+            'Держмитслужби' => '',
+            'України' => '',
         ];
 
         $firstpreg = '/(?:(?<=захисника)|(?<=адвоката)|(?<=захисник)|(?<=преставника)|(?<=представника))(\s|-)+([а-яА-Я]+[a-яА-Я\s.]+),/';
@@ -65,7 +67,7 @@ function parseLinkLawyer($link_to_rtf = '', $dirname) {
         $pregold = '/(?:(?<=захисника)|(?<=адвоката)|(?<=захисник)|(?<=преставника)|(?<=представника))[\s|\n]*[обвинуваченого|обвинуваченої|, - адвоката:]*(\s|-)+([а-яА-ЯІіЇї]+)\s*[А-ЯІЇ]\.*[А-ЯІЇ]\./u';
 
         // жесткая регулярка
-        $pregname = '/[а-яА-ЯіІiIїгЄє]+(\s|\\n)[А-ЯіІЄє]\.[А-ЯіІЄє]\./u';
+        $pregname = '/[А-ЯІIЇЄ][а-яіiїє|А-ЯІIЇЄ]+(\s|\\n)[А-ЯІIЇЄ]\.[А-ЯІIЇЄ]\./u';
 
         $filearr = explode('/', $link_to_rtf);
         $filename = $filearr[count($filearr) - 1];
@@ -79,7 +81,7 @@ function parseLinkLawyer($link_to_rtf = '', $dirname) {
 
         if (!$server_output) return false;
 
-//        file_put_contents("sources/$dirname/$filename", $server_output);
+        file_put_contents("sources/$dirname/$filename", $server_output);
 
         $parser = new RtfStringTexter($server_output);
         $doc = mb_substr($parser->AsString(), 0, 1600);
