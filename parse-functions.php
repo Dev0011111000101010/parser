@@ -132,7 +132,12 @@ function sendMessage($vmnumber, $chatid = 454255748) {
 }
 
 function FilesProcessor($docname) {
-    $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(__DIR__.'/splitted10k/'.$docname);
+    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+    $encoding = \PhpOffice\PhpSpreadsheet\Reader\Csv::guessEncoding(__DIR__.'/splitted10k/'.$docname);
+    $reader->setInputEncoding($encoding);
+    $reader->setDelimiter(',');
+    $spreadsheet = $reader->load(__DIR__.'/splitted10k/'.$docname);
+
     $newdocname = str_replace('csv', 'xlsx', $docname);
 
     echo memory_get_usage();echo "\n";
@@ -141,6 +146,7 @@ function FilesProcessor($docname) {
     @mkdir("sources/$newdirname", 0755, true);
     $sheet = $spreadsheet->getActiveSheet();
     $sheetData = $sheet->toArray();
+
     for ($i = 0; $i < count($sheetData); $i++) {
 
         $link_to_rtf = $sheetData[$i][9];
