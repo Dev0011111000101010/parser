@@ -135,7 +135,7 @@ function FilesProcessor($docname) {
     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
     $encoding = \PhpOffice\PhpSpreadsheet\Reader\Csv::guessEncoding(__DIR__.'/splitted10k/'.$docname);
     $reader->setInputEncoding($encoding);
-    $reader->setDelimiter(',');
+    //$reader->setDelimiter(',');
     $spreadsheet = $reader->load(__DIR__.'/splitted10k/'.$docname);
 
     $newdocname = str_replace('csv', 'xlsx', $docname);
